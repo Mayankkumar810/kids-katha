@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Play, Pause, Square, Sparkles } from 'lucide-react';
 import { LanguageType } from '../../types';
+import { stripHtmlTags } from '../../utils/htmlStoryUtils';
 
 interface SpeechNarrationProps {
   content: string;
@@ -27,10 +28,13 @@ export const SpeechNarration: React.FC<SpeechNarrationProps> = ({ content, langu
   }, []);
 
   const cleanTextForSpeech = (rawText: string) => {
-    // Strip markdown formatting, excessive punctuation, and emojis for clean speech
-    return rawText
+    // Strip HTML tags, markdown formatting, excessive punctuation, and emojis for clean speech
+    const cleanText = stripHtmlTags(rawText);
+    return cleanText
       .replace(/[*_#`~[\]]/g, '')
-      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   };
 
   const startSpeaking = () => {

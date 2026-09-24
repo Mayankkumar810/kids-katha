@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-sans: 'Nunito', 'Poppins', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -49,6 +51,13 @@
 }
 
 /* Line clamp helpers */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -61,4 +70,130 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* =========================================================
+   STORY HTML ANIMATIONS & RICH FORMATTING
+   Allows dynamic animations, font colors & styles in stories
+   ========================================================= */
+
+@keyframes storyBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes storyWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes storyPulseGlow {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.4)); }
+  50% { opacity: 0.88; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.85)); }
+}
+
+@keyframes storyRainbow {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes storyFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes storyShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+/* Story Animation Classes */
+.story-bounce {
+  display: inline-block;
+  animation: storyBounce 1.5s infinite ease-in-out;
+}
+
+.story-wiggle {
+  display: inline-block;
+  animation: storyWiggle 1s infinite ease-in-out;
+}
+
+.story-pulse {
+  display: inline-block;
+  animation: storyPulseGlow 2s infinite ease-in-out;
+}
+
+.story-rainbow {
+  background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6, #ec4899);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: storyRainbow 4s linear infinite;
+  display: inline-block;
+}
+
+.story-float {
+  display: inline-block;
+  animation: storyFloat 2.5s infinite ease-in-out;
+}
+
+.story-shake {
+  display: inline-block;
+  animation: storyShake 0.6s infinite ease-in-out;
+}
+
+/* Story Custom Container Elements */
+.story-dialogue {
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 4px solid #f59e0b;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
+  margin: 1.25rem 0;
+  font-style: italic;
+}
+
+.dark .story-dialogue {
+  background: rgba(245, 158, 11, 0.15);
+  border-left-color: #fbbf24;
+}
+
+.story-magic-box {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(139, 92, 246, 0.08));
+  border: 1px dashed rgba(236, 72, 153, 0.45);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  margin: 1.25rem 0;
+}
+
+.dark .story-magic-box {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(139, 92, 246, 0.18));
+  border-color: rgba(236, 72, 153, 0.7);
+}
+
+.story-scroll-box {
+  background: #fefce8;
+  border: 1px solid #fde047;
+  padding: 1.25rem;
+  border-radius: 0.85rem;
+  box-shadow: inset 0 0 12px rgba(180, 83, 9, 0.06);
+  margin: 1.25rem 0;
+}
+
+.dark .story-scroll-box {
+  background: rgba(113, 63, 18, 0.25);
+  border-color: rgba(202, 138, 4, 0.5);
+}
+
+.story-sfx {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: #ef4444;
+  color: white;
+  font-weight: 800;
+  border-radius: 0.5rem;
+  transform: rotate(-2deg);
+  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.35);
+  margin: 0 0.25rem;
 }

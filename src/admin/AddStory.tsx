@@ -9,11 +9,14 @@ import {
   AlertCircle,
   HelpCircle,
   Clock,
-  Eye
+  Eye,
+  FileCode
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { ThemeType, LanguageType } from '../types';
 import { getThemeStyles } from '../utils/themeStyles';
+import { StoryHtmlEditor } from './StoryHtmlEditor';
+import { stripHtmlTags, getReadingTimeFromHtml, getWordCountFromHtml } from '../utils/htmlStoryUtils';
 
 export const AddStory: React.FC = () => {
   const { categories, addStory } = useData();
@@ -32,6 +35,7 @@ export const AddStory: React.FC = () => {
       setTheme(categories[0].theme);
     }
   }, [categories, categorySlug]);
+
   const [bannerUrl, setBannerUrl] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [content, setContent] = useState('');
@@ -64,10 +68,9 @@ export const AddStory: React.FC = () => {
     }
   };
 
-  // Word count and reading time calculation
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
-  const estimatedMinutes = Math.max(1, Math.ceil(wordCount / 160));
-  const readingTime = `${estimatedMinutes} min read`;
+  // Word count and reading time calculation using HTML-safe utilities
+  const wordCount = getWordCountFromHtml(content);
+  const readingTime = getReadingTimeFromHtml(content);
 
   // Sample presets for quick testing
   const applyPresetImage = (type: 'panchatantra' | 'fairy' | 'royal') => {
@@ -94,6 +97,9 @@ export const AddStory: React.FC = () => {
         .map(k => k.trim())
         .filter(Boolean);
 
+      const plainText = stripHtmlTags(content);
+      const autoDescription = metaDescription || plainText.slice(0, 150) + '...';
+
       const finalStory = await addStory({
         title,
         slug: slug.trim(),
@@ -105,7 +111,7 @@ export const AddStory: React.FC = () => {
         content,
         moral,
         metaTitle: metaTitle || title,
-        metaDescription: metaDescription || content.slice(0, 150) + '...',
+        metaDescription: autoDescription,
         keywords: keywordArr.length > 0 ? keywordArr : ['story', language.toLowerCase()],
         readingTime,
         isFeatured,
@@ -131,7 +137,7 @@ export const AddStory: React.FC = () => {
           Story Published Successfully!
         </h2>
         <p className="mt-2 text-xs text-slate-500">
-          Your new story is now live with automated theme styling, SEO meta tags, and audio narration support.
+          Your new HTML story is live with font colors, custom animations, live theme styling, and audio narration.
         </p>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -150,6 +156,8 @@ export const AddStory: React.FC = () => {
               setSlug('');
               setContent('');
               setMoral('');
+              setMetaTitle('');
+              setMetaDescription('');
             }}
             className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200"
           >
@@ -161,13 +169,13 @@ export const AddStory: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-black text-slate-800 dark:text-white">
-          Publish New Story
+          Publish New HTML Story
         </h1>
         <p className="text-xs text-slate-500">
-          Create an SEO-optimized kids story in Hindi or English with custom theme and reading controls.
+          Create rich stories in HTML format with real-time preview, colorful fonts, text animations, and kid-friendly styling.
         </p>
       </div>
 
@@ -180,7 +188,7 @@ export const AddStory: React.FC = () => {
                 No Categories Created Yet!
               </p>
               <p className="text-[11px] text-amber-800/80 dark:text-amber-300">
-                Stories need to belong to a category (with themes like Moral, Royal, Kids, Horror, or Default). Please create your first category first.
+                Stories need to belong to a category. Please create your first category first.
               </p>
             </div>
           </div>
@@ -207,7 +215,7 @@ export const AddStory: React.FC = () => {
             <input
               type="text"
               required
-              placeholder="e.g. बुद्धिमान खरगोश और शेर or The Wise Squirrel"
+              placeholder="e.g. बुद्धिमान खरगोश और शेर or The Clever Little Squirrel"
               value={title}
               onChange={e => handleTitleChange(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -282,7 +290,7 @@ export const AddStory: React.FC = () => {
           </div>
         </div>
 
-        {/* 📸 IMAGE SYSTEM (SPECIFIED IN PROMPT) */}
+        {/* 📸 IMAGE SYSTEM */}
         <div className="rounded-3xl border border-slate-200/80 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 shadow-xs space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
             <h2 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -316,89 +324,79 @@ export const AddStory: React.FC = () => {
             </div>
           </div>
 
-          {/* Banner Image with Size Guide and Preview */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <label className="font-bold text-slate-700 dark:text-slate-300">
-                Banner Image URL (Top Story Header)
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Banner Image */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                Banner Image URL (Top Header - 1200x600)
               </label>
-              <div className="flex items-center gap-2 text-[10px] text-slate-400">
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 font-bold dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Size: 1200x600
-                </span>
-                <span>Format: JPG/PNG</span>
-                <span>Max: &lt;500KB</span>
-              </div>
+              <input
+                type="url"
+                placeholder="https://images.unsplash.com/..."
+                value={bannerUrl}
+                onChange={e => setBannerUrl(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+              {bannerUrl && (
+                <div className="relative aspect-[16/8] overflow-hidden rounded-xl border border-slate-200 shadow-xs">
+                  <img
+                    src={bannerUrl}
+                    alt="Banner Preview"
+                    className="h-full w-full object-cover"
+                    onError={e => {
+                      (e.target as HTMLImageElement).src = '/images/default-og.jpg';
+                    }}
+                  />
+                  <span className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-0.5 text-[10px] text-white">
+                    Banner Preview
+                  </span>
+                </div>
+              )}
             </div>
-            <input
-              type="url"
-              placeholder="https://images.unsplash.com/..."
-              value={bannerUrl}
-              onChange={e => setBannerUrl(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            />
-            {bannerUrl && (
-              <div className="relative aspect-[16/8] max-w-md overflow-hidden rounded-xl border border-slate-200 shadow-xs">
-                <img
-                  src={bannerUrl}
-                  alt="Banner Preview"
-                  className="h-full w-full object-cover"
-                  onError={e => {
-                    (e.target as HTMLImageElement).src = '/images/default-og.jpg';
-                  }}
-                />
-                <span className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-0.5 text-[10px] text-white">
-                  Live Banner Preview (1200x600)
-                </span>
-              </div>
-            )}
-          </div>
 
-          {/* Thumbnail Image with Size Guide and Preview */}
-          <div className="space-y-2 pt-2">
-            <div className="flex items-center justify-between text-xs">
-              <label className="font-bold text-slate-700 dark:text-slate-300">
-                Thumbnail Image URL (Card & Grid)
+            {/* Thumbnail Image */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                Thumbnail Image URL (Cards - 600x400)
               </label>
-              <div className="flex items-center gap-2 text-[10px] text-slate-400">
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 font-bold dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                  Size: 600x400
-                </span>
-                <span>Format: JPG/PNG</span>
-                <span>Max: &lt;200KB</span>
-              </div>
+              <input
+                type="url"
+                placeholder="https://images.unsplash.com/..."
+                value={thumbnailUrl}
+                onChange={e => setThumbnailUrl(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              />
+              {thumbnailUrl && (
+                <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-slate-200 shadow-xs">
+                  <img
+                    src={thumbnailUrl}
+                    alt="Thumbnail Preview"
+                    className="h-full w-full object-cover"
+                    onError={e => {
+                      (e.target as HTMLImageElement).src = '/images/default-og.jpg';
+                    }}
+                  />
+                  <span className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-0.5 text-[10px] text-white">
+                    Thumbnail Preview
+                  </span>
+                </div>
+              )}
             </div>
-            <input
-              type="url"
-              placeholder="https://images.unsplash.com/..."
-              value={thumbnailUrl}
-              onChange={e => setThumbnailUrl(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            />
-            {thumbnailUrl && (
-              <div className="relative aspect-[16/10] max-w-xs overflow-hidden rounded-xl border border-slate-200 shadow-xs">
-                <img
-                  src={thumbnailUrl}
-                  alt="Thumbnail Preview"
-                  className="h-full w-full object-cover"
-                  onError={e => {
-                    (e.target as HTMLImageElement).src = '/images/default-og.jpg';
-                  }}
-                />
-                <span className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-0.5 text-[10px] text-white">
-                  Live Thumbnail Preview (600x400)
-                </span>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Content & Moral */}
+        {/* 📝 HTML STORY CONTENT WITH LIVE PREVIEW */}
         <div className="rounded-3xl border border-slate-200/80 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <Clock className="w-4 h-4 text-emerald-500" /> 3. Story Content & Moral
-            </h2>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
+            <div>
+              <h2 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <FileCode className="w-4 h-4 text-emerald-500" /> 3. Story Content in HTML Format (With Live Preview)
+              </h2>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Write story in HTML to animate words (bounce, rainbow, float, shake) and customize font colors.
+              </p>
+            </div>
+
             <div className="flex items-center gap-3 text-xs text-slate-400">
               <span>{wordCount} words</span>
               <span>•</span>
@@ -406,19 +404,12 @@ export const AddStory: React.FC = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
-              Story Paragraphs (Separate paragraphs with double enter) *
-            </label>
-            <textarea
-              required
-              rows={12}
-              placeholder="Write or paste your story here in Hindi or English..."
-              value={content}
-              onChange={e => setContent(e.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-            />
-          </div>
+          {/* Dedicated HTML Editor with Formatting Toolbar & Realtime Live Preview */}
+          <StoryHtmlEditor
+            value={content}
+            onChange={setContent}
+            language={language}
+          />
 
           <div>
             <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">
@@ -472,7 +463,7 @@ export const AddStory: React.FC = () => {
             </label>
             <textarea
               rows={3}
-              placeholder="Brief summary shown in Google search results and WhatsApp share previews..."
+              placeholder="Brief plain-text summary for Google search and WhatsApp share..."
               value={metaDescription}
               onChange={e => setMetaDescription(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs focus:border-amber-500 focus:bg-white focus:outline-hidden dark:border-slate-700 dark:bg-slate-800 dark:text-white"
@@ -504,7 +495,7 @@ export const AddStory: React.FC = () => {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !title || !content}
             className="flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-amber-600 disabled:opacity-50 transition-transform active:scale-95"
           >
             <PlusCircle className="w-4 h-4" />

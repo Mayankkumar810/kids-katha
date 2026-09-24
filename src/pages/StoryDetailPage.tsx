@@ -22,6 +22,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { AdBanner } from '../components/common/AdBanner';
 import { SEO } from '../components/common/SEO';
 import { StoryCard } from '../components/common/StoryCard';
+import { isHtmlContent } from '../utils/htmlStoryUtils';
 
 export const StoryDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -114,8 +115,13 @@ export const StoryDetailPage: React.FC = () => {
     }
   };
 
+  // Check if content is written in HTML format
+  const isHtml = isHtmlContent(story.content);
+
   // Split content paragraphs to inject in-content ad
-  const paragraphs = story.content.split('\n\n').filter(p => p.trim());
+  const paragraphs = isHtml
+    ? story.content.split(/<\/p>/i).filter(p => p.trim()).map(p => (p.includes('<p') ? p + '</p>' : `<p>${p}</p>`))
+    : story.content.split('\n\n').filter(p => p.trim());
   const middleIndex = Math.floor(paragraphs.length / 2);
 
   // Handle scroll progress
@@ -288,9 +294,16 @@ export const StoryDetailPage: React.FC = () => {
               <div className={`space-y-6 text-slate-800 dark:text-slate-200 ${getFontSizeClass()}`}>
                 {paragraphs.map((p, idx) => (
                   <React.Fragment key={idx}>
-                    <p className="first-letter:text-2xl first-letter:font-bold first-letter:text-amber-500">
-                      {p}
-                    </p>
+                    {isHtml ? (
+                      <div
+                        className="story-html-paragraph leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: p }}
+                      />
+                    ) : (
+                      <p className="first-letter:text-2xl first-letter:font-bold first-letter:text-amber-500 leading-relaxed">
+                        {p}
+                      </p>
+                    )}
 
                     {/* In-Content Native Ad inserted midway */}
                     {idx === middleIndex && (

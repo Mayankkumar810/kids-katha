@@ -23,6 +23,7 @@ import { StoryCard } from '../components/common/StoryCard';
 import { AdBanner } from '../components/common/AdBanner';
 import { SEO } from '../components/common/SEO';
 import { getThemeStyles } from '../utils/themeStyles';
+import { stripHtmlTags } from '../utils/htmlStoryUtils';
 
 export const HomePage: React.FC = () => {
   const { 
@@ -261,7 +262,7 @@ export const HomePage: React.FC = () => {
                 </Link>
 
                 <p className="text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-3">
-                  {currentFeatured.metaDescription}
+                  {stripHtmlTags(currentFeatured.metaDescription)}
                 </p>
 
                 {currentFeatured.moral && (

@@ -4,6 +4,7 @@ import { Bookmark, Clock, Eye, Sparkles } from 'lucide-react';
 import { Story } from '../../types';
 import { getThemeStyles } from '../../utils/themeStyles';
 import { useData } from '../../context/DataContext';
+import { stripHtmlTags } from '../../utils/htmlStoryUtils';
 
 interface StoryCardProps {
   story: Story;
@@ -66,7 +67,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({ story, layout = 'grid' }) 
             </Link>
 
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
-              {story.metaDescription}
+              {stripHtmlTags(story.metaDescription)}
             </p>
           </div>
 
@@ -175,7 +176,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({ story, layout = 'grid' }) 
           </Link>
 
           <p className="mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-2">
-            {story.metaDescription}
+            {stripHtmlTags(story.metaDescription)}
           </p>
 
           {story.moral && (

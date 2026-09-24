@@ -27,7 +27,6 @@ import { PolicySettings } from './admin/PolicySettings';
 import { SocialMediaSettings } from './admin/SocialMediaSettings';
 import { HomepageSettings } from './admin/HomepageSettings';
 import { AdsSettings } from './admin/AdsSettings';
-import { FirebaseSetupGuide } from './admin/FirebaseSetupGuide';
 
 export default function App() {
   return (
@@ -70,7 +69,6 @@ export default function App() {
                 <Route path="social" element={<SocialMediaSettings />} />
                 <Route path="homepage" element={<HomepageSettings />} />
                 <Route path="ads" element={<AdsSettings />} />
-                <Route path="firebase-guide" element={<FirebaseSetupGuide />} />
               </Route>
 
               {/* Catch-all 404 Route */}
