@@ -8,10 +8,42 @@
     --font-hindi: 'Noto Sans Devanagari', 'Nunito', sans-serif;
   }
 
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     font-family: var(--font-sans);
     -webkit-tap-highlight-color: transparent;
   }
+
+  img, svg, video, canvas, audio, iframe, embed, object {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Prevent horizontal squeeze & text clipping on mobile */
+.break-words-safe {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .font-hindi {

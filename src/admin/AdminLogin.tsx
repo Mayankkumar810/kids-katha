@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Mail, ShieldCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import { Lock, Mail, ShieldCheck, ArrowRight, AlertCircle, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 export const AdminLogin: React.FC = () => {
   const { login } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useTheme();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -28,7 +30,18 @@ export const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12 relative">
+      {/* Top right theme toggle */}
+      <button
+        type="button"
+        onClick={toggleDarkMode}
+        className="absolute top-5 right-5 flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 shadow-xs transition-colors cursor-pointer"
+        title="Toggle Theme"
+      >
+        {isDarkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-slate-500" />}
+        <span>{isDarkMode ? 'Light' : 'Dark'}</span>
+      </button>
+
       <div className="w-full max-w-md rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-10 shadow-xl dark:border-slate-800 dark:bg-slate-900">
         <div className="text-center space-y-2">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md">

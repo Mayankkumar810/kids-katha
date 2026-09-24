@@ -15,9 +15,9 @@ export const PublicLayout: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors relative">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors relative overflow-x-hidden w-full max-w-full">
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full min-w-0">
         <Outlet />
       </main>
       <Footer />

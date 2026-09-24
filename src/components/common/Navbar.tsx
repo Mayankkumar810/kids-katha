@@ -63,17 +63,17 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Main Nav Bar */}
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+        <div className="container mx-auto flex h-16 items-center justify-between px-3 sm:px-6 gap-2">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-pink-500 text-white shadow-md shadow-amber-500/20 transition-transform group-hover:scale-105">
+          <Link to="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0 group min-w-0">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-pink-500 text-white shadow-md shadow-amber-500/20 transition-transform group-hover:scale-105">
               <BookOpen className="w-5 h-5" />
             </div>
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-800 dark:text-white flex items-center gap-1 font-english">
+            <div className="min-w-0">
+              <span className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-800 dark:text-white flex items-center gap-1 font-english truncate">
                 Katha<span className="text-amber-500">Vichar</span>
               </span>
-              <span className="block text-[10px] font-semibold text-slate-400 dark:text-slate-400 font-hindi -mt-1">
+              <span className="hidden xs:block text-[9px] sm:text-[10px] font-semibold text-slate-400 dark:text-slate-400 font-hindi -mt-0.5 sm:-mt-1 truncate">
                 कथा विचार • बाल संसार
               </span>
             </div>
@@ -160,11 +160,11 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Action Icons */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Admin Support Trigger */}
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-3 shrink-0">
+            {/* Admin Support Trigger (Desktop & Tablet) */}
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('open_admin_support_modal'))}
-              className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 transition-colors cursor-pointer"
+              className="hidden sm:flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 transition-colors cursor-pointer shrink-0"
               title="Contact Admin Support (सहायता)"
             >
               <Headphones className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
@@ -174,23 +174,23 @@ export const Navbar: React.FC = () => {
             {/* Search Trigger */}
             <button
               onClick={() => setShowSearchModal(true)}
-              className="rounded-full p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+              className="rounded-full p-1.5 sm:p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors shrink-0"
               title="Search Stories"
               aria-label="Search Stories"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             {/* Bookmarks Page Link */}
             <Link
               to="/bookmarks"
-              className="relative rounded-full p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+              className="relative rounded-full p-1.5 sm:p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors shrink-0"
               title="Saved Bookmarks"
               aria-label="Bookmarks"
             >
-              <Bookmark className="w-5 h-5" />
+              <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
               {bookmarks.length > 0 && (
-                <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white shadow-xs">
+                <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full bg-amber-500 text-[9px] sm:text-[10px] font-bold text-white shadow-xs">
                   {bookmarks.length}
                 </span>
               )}
@@ -199,20 +199,20 @@ export const Navbar: React.FC = () => {
             {/* Dark Mode Switcher */}
             <button
               onClick={toggleDarkMode}
-              className="rounded-full p-2 text-slate-600 hover:bg-slate-100 dark:text-amber-400 dark:hover:bg-slate-800 transition-colors"
+              className="rounded-full p-1.5 sm:p-2 text-slate-600 hover:bg-slate-100 dark:text-amber-400 dark:hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
               title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               aria-label="Toggle Dark Mode"
             >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {isDarkMode ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
 
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(prev => !prev)}
-              className="lg:hidden rounded-xl p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="lg:hidden rounded-xl p-1.5 sm:p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 shrink-0"
               aria-label="Toggle Menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>

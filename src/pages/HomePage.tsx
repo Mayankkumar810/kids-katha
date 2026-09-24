@@ -100,25 +100,25 @@ export const HomePage: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/20" />
           </div>
 
-          <div className="relative z-10 max-w-2xl px-6 py-16 sm:px-12 sm:py-24">
+          <div className="relative z-10 max-w-2xl px-5 py-12 sm:px-12 sm:py-24">
             <div className="inline-flex items-center gap-2 rounded-full bg-amber-400/20 px-3.5 py-1 text-xs font-bold text-amber-300 backdrop-blur-md border border-amber-300/30">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>{homepageConfig.heroBadge || 'Magic of Stories in Hindi & English'}</span>
             </div>
 
-            <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl font-english leading-tight text-white drop-shadow-md">
+            <h1 className="mt-4 text-2xl sm:text-5xl font-black tracking-tight font-english leading-tight text-white drop-shadow-md break-words">
               {homepageConfig.heroTitle || 'Step Into Worlds of Wonder & Wisdom'}
             </h1>
 
-            <p className="mt-4 text-sm sm:text-base leading-relaxed text-slate-300">
+            <p className="mt-3 text-xs sm:text-base leading-relaxed text-slate-300 break-words">
               {homepageConfig.heroSubtitle ||
                 'Handpicked moral tales, Panchatantra wisdom, and bedtime adventures created lovingly for young dreamers and mindful parents.'}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3">
               <Link
                 to={homepageConfig.heroButtonLink || '/stories'}
-                className="flex items-center gap-2 rounded-2xl bg-amber-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 transition-all hover:scale-105 active:scale-95"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-amber-500 px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 transition-all hover:scale-105 active:scale-95"
               >
                 <span>{homepageConfig.heroButtonText || 'Explore All Stories'}</span>
                 <ArrowRight className="w-4 h-4" />
@@ -126,7 +126,7 @@ export const HomePage: React.FC = () => {
 
               <Link
                 to="/stories?lang=Hindi"
-                className="flex items-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-md hover:bg-white/20 transition-all border border-white/20 font-hindi"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-white backdrop-blur-md hover:bg-white/20 transition-all border border-white/20 font-hindi"
               >
                 <span>🇮🇳 हिंदी कहानियाँ</span>
               </Link>
@@ -387,10 +387,10 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Language filter pills */}
-          <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-900 overflow-x-auto max-w-full no-scrollbar">
             <button
               onClick={() => setActiveLangFilter('All')}
-              className={`rounded-xl px-3 py-1 text-xs font-bold transition-colors ${
+              className={`rounded-xl px-3 py-1 text-xs font-bold transition-colors shrink-0 ${
                 activeLangFilter === 'All'
                   ? 'bg-amber-500 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
@@ -400,7 +400,7 @@ export const HomePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveLangFilter('Hindi')}
-              className={`rounded-xl px-3 py-1 text-xs font-bold transition-colors font-hindi ${
+              className={`rounded-xl px-3 py-1 text-xs font-bold transition-colors font-hindi shrink-0 ${
                 activeLangFilter === 'Hindi'
                   ? 'bg-amber-500 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'
@@ -410,7 +410,7 @@ export const HomePage: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveLangFilter('English')}
-              className={`rounded-xl px-3 py-1 text-xs font-bold transition-colors ${
+              className={`rounded-xl px-3 py-1 text-xs font-bold transition-colors shrink-0 ${
                 activeLangFilter === 'English'
                   ? 'bg-amber-500 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-300'

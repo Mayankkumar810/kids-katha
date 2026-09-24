@@ -46,7 +46,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ position, className = '' }) 
 
   return (
     <div
-      className={`mx-auto flex flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-300/80 bg-slate-50/80 p-3 text-center transition-all dark:border-slate-800 dark:bg-slate-900/60 ${getDimensionClass()} ${className}`}
+      className={`mx-auto flex flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-300/80 bg-slate-50/80 p-3 text-center transition-all max-w-full dark:border-slate-800 dark:bg-slate-900/60 ${getDimensionClass()} ${className}`}
     >
       <div className="mb-1.5 flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
         <span>Advertisement</span>
@@ -57,7 +57,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ position, className = '' }) 
       {slot.code && slot.code.includes('<ins') ? (
         // Real or injected AdSense code
         <div
-          className="w-full flex justify-center items-center overflow-hidden text-xs text-slate-500"
+          className="w-full max-w-full flex justify-center items-center overflow-hidden text-xs text-slate-500 [&_*]:max-w-full [&_ins]:max-w-full [&_iframe]:max-w-full"
           dangerouslySetInnerHTML={{ __html: slot.code }}
         />
       ) : (

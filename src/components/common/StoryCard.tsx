@@ -49,24 +49,24 @@ export const StoryCard: React.FC<StoryCardProps> = ({ story, layout = 'grid' }) 
           </div>
         </Link>
 
-        <div className="flex flex-1 flex-col justify-between">
+        <div className="flex flex-1 flex-col justify-between min-w-0">
           <div>
             <div className="flex items-center justify-between gap-2 text-xs">
-              <span className="font-semibold text-slate-500 dark:text-slate-400">
+              <span className="font-semibold text-slate-500 dark:text-slate-400 truncate">
                 {category?.name || story.categorySlug}
               </span>
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300 shrink-0">
                 {story.language === 'Hindi' ? '🇮🇳 हिंदी' : '🇬🇧 English'}
               </span>
             </div>
 
             <Link to={`/story/${story.slug}`} className="mt-1.5 block">
-              <h3 className="text-base font-bold text-slate-800 transition-colors group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400">
+              <h3 className="text-base font-bold text-slate-800 transition-colors group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400 break-words line-clamp-2">
                 {story.title}
               </h3>
             </Link>
 
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 line-clamp-2 break-words">
               {stripHtmlTags(story.metaDescription)}
             </p>
           </div>
@@ -103,9 +103,9 @@ export const StoryCard: React.FC<StoryCardProps> = ({ story, layout = 'grid' }) 
   // Grid layout default
   return (
     <article
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border ${themeStyle.cardBorder} bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${themeStyle.cardShadow} dark:bg-slate-900`}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border ${themeStyle.cardBorder} bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${themeStyle.cardShadow} dark:bg-slate-900 w-full min-w-0`}
     >
-      <div>
+      <div className="min-w-0">
         {/* Thumbnail + Overlays */}
         <Link to={`/story/${story.slug}`} className="block overflow-hidden">
           <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -155,27 +155,27 @@ export const StoryCard: React.FC<StoryCardProps> = ({ story, layout = 'grid' }) 
         </Link>
 
         {/* Content Body */}
-        <div className="p-4">
+        <div className="p-4 min-w-0">
           <div className="flex items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
             <Link
               to={`/category/${story.categorySlug}`}
-              className="font-semibold text-amber-600 hover:underline dark:text-amber-400"
+              className="font-semibold text-amber-600 hover:underline dark:text-amber-400 truncate"
             >
               {category?.name || story.categorySlug}
             </Link>
-            <span className="flex items-center gap-1 text-[11px]">
+            <span className="flex items-center gap-1 text-[11px] shrink-0">
               <Clock className="w-3 h-3 text-slate-400" />
               {story.readingTime}
             </span>
           </div>
 
           <Link to={`/story/${story.slug}`} className="mt-2 block">
-            <h3 className="text-base font-bold tracking-tight text-slate-800 transition-colors group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400 line-clamp-2">
+            <h3 className="text-base font-bold tracking-tight text-slate-800 transition-colors group-hover:text-amber-600 dark:text-slate-100 dark:group-hover:text-amber-400 line-clamp-2 break-words">
               {story.title}
             </h3>
           </Link>
 
-          <p className="mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-2">
+          <p className="mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-2 break-words">
             {stripHtmlTags(story.metaDescription)}
           </p>
 
