@@ -48,7 +48,6 @@ export default function App() {
                 <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
                 <Route path="/terms" element={<LegalPage type="terms" />} />
                 <Route path="/disclaimer" element={<LegalPage type="disclaimer" />} />
-                <Route path="*" element={<NotFoundPage />} />
               </Route>
 
               {/* Admin Auth Route */}
@@ -72,6 +71,11 @@ export default function App() {
                 <Route path="homepage" element={<HomepageSettings />} />
                 <Route path="ads" element={<AdsSettings />} />
                 <Route path="firebase-guide" element={<FirebaseSetupGuide />} />
+              </Route>
+
+              {/* Catch-all 404 Route */}
+              <Route element={<PublicLayout />}>
+                <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>
           </BrowserRouter>
