@@ -28,6 +28,7 @@ interface DataContextType {
   homepageConfig: HomepageConfig;
   adsConfig: AdsConfig;
   legalConfig: LegalConfig;
+  adminSupportEmail: string;
   bookmarks: string[];
   readingProgress: Record<string, ReadingProgress>;
   loading: boolean;
@@ -130,14 +131,61 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
+  const getStoredAdminEmail = () => {
+    try {
+      return (
+        localStorage.getItem('kathavichar_support_email') ||
+        localStorage.getItem('kathavichar_logged_admin_email') ||
+        ''
+      );
+    } catch {
+      return '';
+    }
+  };
+
+  const [adminSupportEmail, setAdminSupportEmail] = useState<string>(() => {
+    const stored = getStoredAdminEmail();
+    return stored || initialLegalConfig.contactEmail;
+  });
+
   const [legalConfig, setLegalConfig] = useState<LegalConfig>(() => {
     try {
       const saved = localStorage.getItem(LS_LEGAL);
-      return saved ? JSON.parse(saved) : initialLegalConfig;
+      const storedEmail = getStoredAdminEmail();
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (storedEmail && (!parsed.contactEmail || parsed.contactEmail === 'contact@kathavichar.com')) {
+          parsed.contactEmail = storedEmail;
+        }
+        return parsed;
+      }
+      return {
+        ...initialLegalConfig,
+        contactEmail: storedEmail || initialLegalConfig.contactEmail
+      };
     } catch {
       return initialLegalConfig;
     }
   });
+
+  // Listen for admin login / email update events
+  useEffect(() => {
+    const handleEmailUpdate = (e: any) => {
+      const newEmail = e.detail || getStoredAdminEmail();
+      if (newEmail) {
+        setAdminSupportEmail(newEmail);
+        setLegalConfig(prev => ({
+          ...prev,
+          contactEmail: newEmail
+        }));
+      }
+    };
+
+    window.addEventListener('kathavichar_admin_email_updated', handleEmailUpdate);
+    return () => {
+      window.removeEventListener('kathavichar_admin_email_updated', handleEmailUpdate);
+    };
+  }, []);
 
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
     try {
@@ -450,6 +498,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         homepageConfig,
         adsConfig,
         legalConfig,
+        adminSupportEmail,
         bookmarks,
         readingProgress,
         loading,

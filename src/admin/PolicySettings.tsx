@@ -16,9 +16,17 @@ import { useData } from '../context/DataContext';
 export const PolicySettings: React.FC = () => {
   const { legalConfig, updateLegalConfig } = useData();
 
+  const storedAdminEmail = typeof window !== 'undefined'
+    ? (localStorage.getItem('kathavichar_support_email') || localStorage.getItem('kathavichar_logged_admin_email') || '')
+    : '';
+
   const [siteName, setSiteName] = useState(legalConfig?.siteName || 'KathaVichar (कथाविचार)');
   const [publisherName, setPublisherName] = useState(legalConfig?.publisherName || 'KathaVichar Editorial Team');
-  const [contactEmail, setContactEmail] = useState(legalConfig?.contactEmail || 'contact@kathavichar.com');
+  const [contactEmail, setContactEmail] = useState(
+    legalConfig?.contactEmail && legalConfig.contactEmail !== 'contact@kathavichar.com'
+      ? legalConfig.contactEmail
+      : (storedAdminEmail || legalConfig?.contactEmail || '')
+  );
   const [customPrivacyPolicy, setCustomPrivacyPolicy] = useState(
     legalConfig?.customPrivacyPolicy || 
     'KathaVichar is dedicated to upholding the highest safety standards for young readers, parents, and teachers.'
@@ -52,6 +60,10 @@ export const PolicySettings: React.FC = () => {
         customDisclaimer,
         aboutText
       });
+      if (contactEmail) {
+        localStorage.setItem('kathavichar_support_email', contactEmail);
+        window.dispatchEvent(new CustomEvent('kathavichar_admin_email_updated', { detail: contactEmail }));
+      }
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {

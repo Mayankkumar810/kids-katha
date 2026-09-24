@@ -6,7 +6,8 @@ import { SEO } from '../components/common/SEO';
 import { useData } from '../context/DataContext';
 
 export const AboutPage: React.FC = () => {
-  const { legalConfig } = useData();
+  const { legalConfig, adminSupportEmail } = useData();
+  const contactEmail = adminSupportEmail || legalConfig?.contactEmail || 'contact@kathavichar.com';
 
   return (
     <div className="container mx-auto px-4 sm:px-6 py-6 max-w-4xl space-y-8">
@@ -83,11 +84,23 @@ export const AboutPage: React.FC = () => {
           Stories on {legalConfig?.siteName || 'KathaVichar'} are curated and reviewed by {legalConfig?.publisherName || 'KathaVichar Editorial Team'}. We strictly adhere to child-friendly storytelling principles, avoiding violence, sensationalism, or misleading clickbait.
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
           <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
             <Mail className="w-4 h-4 text-amber-500" />
-            <span>Questions or suggestions: <strong>{legalConfig?.contactEmail || 'contact@kathavichar.com'}</strong></span>
+            <span>Admin Support & Suggestions:</span>
+            <a 
+              href={`mailto:${contactEmail}?subject=KathaVichar%20Support`}
+              className="font-bold text-amber-600 hover:text-amber-700 dark:text-amber-400 underline"
+            >
+              {contactEmail}
+            </a>
           </div>
+          <a
+            href={`mailto:${contactEmail}?subject=KathaVichar%20Support`}
+            className="rounded-xl bg-amber-50 px-3 py-1.5 font-bold text-amber-700 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 transition-colors"
+          >
+            Contact Admin &rarr;
+          </a>
         </div>
       </div>
 

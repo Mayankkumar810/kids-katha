@@ -19,9 +19,15 @@ import {
   Inbox
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 import { getThemeStyles } from '../utils/themeStyles';
 
 export const Dashboard: React.FC = () => {
+  const { currentUser } = useAuth();
+  const adminEmail = currentUser?.email || 
+    (typeof window !== 'undefined' ? localStorage.getItem('kathavichar_logged_admin_email') : '') || 
+    'Administrator';
+
   const { 
     stories, 
     categories, 
@@ -45,10 +51,15 @@ export const Dashboard: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-white">
-            Editorial Dashboard
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-black text-slate-800 dark:text-white">
+              Editorial Dashboard
+            </h1>
+            <span className="hidden sm:inline-flex items-center rounded-lg bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50">
+              Admin: {adminEmail}
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Realtime overview of children stories, readers engagement, and dynamic themes.
           </p>
         </div>

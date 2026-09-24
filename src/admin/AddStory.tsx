@@ -393,7 +393,7 @@ export const AddStory: React.FC = () => {
                 <FileCode className="w-4 h-4 text-emerald-500" /> 3. Story Content in HTML Format (With Live Preview)
               </h2>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Write story in HTML to animate words (bounce, rainbow, float, shake) and customize font colors.
+                Write story in HTML format or paste AI-generated HTML. Full live preview is supported.
               </p>
             </div>
 

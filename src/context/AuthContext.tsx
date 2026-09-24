@@ -25,6 +25,8 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 const LOCAL_ADMIN_KEY = 'kathavichar_admin_session';
+export const LOCAL_ADMIN_EMAIL_KEY = 'kathavichar_logged_admin_email';
+export const LOCAL_SUPPORT_EMAIL_KEY = 'kathavichar_support_email';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
@@ -35,7 +37,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (isFirebaseActive && auth) {
       const unsubscribe = onAuthStateChanged(auth, (user: FirebaseUser | null) => {
         if (user) {
-          setCurrentUser({ email: user.email || 'admin@kathavichar.com', uid: user.uid });
+          const userEmail = user.email || localStorage.getItem(LOCAL_ADMIN_EMAIL_KEY) || 'admin';
+          setCurrentUser({ email: userEmail, uid: user.uid });
+          if (user.email) {
+            localStorage.setItem(LOCAL_ADMIN_EMAIL_KEY, user.email);
+            localStorage.setItem(LOCAL_SUPPORT_EMAIL_KEY, user.email);
+            window.dispatchEvent(new CustomEvent('kathavichar_admin_email_updated', { detail: user.email }));
+          }
         } else {
           setCurrentUser(null);
         }
@@ -43,11 +51,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       return () => unsubscribe();
     } else {
-      // Local session check when Firebase placeholders are active
+      // Local session check
       try {
         const savedSession = localStorage.getItem(LOCAL_ADMIN_KEY);
         if (savedSession) {
-          setCurrentUser(JSON.parse(savedSession));
+          const parsed = JSON.parse(savedSession);
+          setCurrentUser(parsed);
+          if (parsed.email) {
+            localStorage.setItem(LOCAL_ADMIN_EMAIL_KEY, parsed.email);
+            localStorage.setItem(LOCAL_SUPPORT_EMAIL_KEY, parsed.email);
+          }
         }
       } catch (e) {
         console.warn('Error reading local admin session:', e);
@@ -57,21 +70,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [isFirebaseActive]);
 
   const login = async (email: string, password: string): Promise<void> => {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password || password.length < 6) {
+      throw new Error('Please enter a valid email and a password of at least 6 characters.');
+    }
+
     if (isFirebaseActive && auth) {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      setCurrentUser({ email: cred.user.email || email, uid: cred.user.uid });
+      const cred = await signInWithEmailAndPassword(auth, trimmedEmail, password);
+      const userEmail = cred.user.email || trimmedEmail;
+      const adminUser: AdminUser = { email: userEmail, uid: cred.user.uid };
+      setCurrentUser(adminUser);
+      localStorage.setItem(LOCAL_ADMIN_EMAIL_KEY, userEmail);
+      localStorage.setItem(LOCAL_SUPPORT_EMAIL_KEY, userEmail);
+      localStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(adminUser));
+      window.dispatchEvent(new CustomEvent('kathavichar_admin_email_updated', { detail: userEmail }));
     } else {
-      // Offline / Placeholder mode validation
-      // Allow admin credentials: admin@kathavichar.com / admin123 or any reasonable admin password
-      if (!email || !password || password.length < 6) {
-        throw new Error('Password must be at least 6 characters long.');
-      }
       const adminUser: AdminUser = {
-        email: email,
+        email: trimmedEmail,
         uid: 'local-admin-' + Date.now()
       };
       localStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(adminUser));
+      localStorage.setItem(LOCAL_ADMIN_EMAIL_KEY, trimmedEmail);
+      localStorage.setItem(LOCAL_SUPPORT_EMAIL_KEY, trimmedEmail);
       setCurrentUser(adminUser);
+      window.dispatchEvent(new CustomEvent('kathavichar_admin_email_updated', { detail: trimmedEmail }));
     }
   };
 

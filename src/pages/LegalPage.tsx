@@ -9,11 +9,11 @@ interface LegalPageProps {
 }
 
 export const LegalPage: React.FC<LegalPageProps> = ({ type }) => {
-  const { legalConfig } = useData();
+  const { legalConfig, adminSupportEmail } = useData();
 
   const siteName = legalConfig?.siteName || 'KathaVichar (कथाविचार)';
   const publisherName = legalConfig?.publisherName || 'KathaVichar Editorial Team';
-  const contactEmail = legalConfig?.contactEmail || 'contact@kathavichar.com';
+  const contactEmail = adminSupportEmail || legalConfig?.contactEmail || 'contact@kathavichar.com';
 
   const getDetails = () => {
     switch (type) {

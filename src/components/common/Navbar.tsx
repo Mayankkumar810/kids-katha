@@ -11,7 +11,8 @@ import {
   Sparkles, 
   ShieldCheck, 
   Layers,
-  ChevronDown
+  ChevronDown,
+  Headphones
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useData } from '../../context/DataContext';
@@ -160,6 +161,16 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Admin Support Trigger */}
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('open_admin_support_modal'))}
+              className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-800 hover:bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 transition-colors cursor-pointer"
+              title="Contact Admin Support (सहायता)"
+            >
+              <Headphones className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span className="hidden md:inline">Support</span>
+            </button>
+
             {/* Search Trigger */}
             <button
               onClick={() => setShowSearchModal(true)}
@@ -268,6 +279,18 @@ export const Navbar: React.FC = () => {
                   {bookmarks.length}
                 </span>
               </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.dispatchEvent(new CustomEvent('open_admin_support_modal'));
+                }}
+                className="w-full text-left rounded-xl px-3 py-2 flex items-center gap-2 text-amber-700 bg-amber-50/70 hover:bg-amber-100 dark:text-amber-300 dark:bg-amber-950/40 cursor-pointer font-bold"
+              >
+                <Headphones className="w-4 h-4" />
+                <span>Admin Support (सहायता)</span>
+              </button>
             </div>
           </div>
         )}

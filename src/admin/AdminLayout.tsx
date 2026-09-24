@@ -21,6 +21,10 @@ export const AdminLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const adminEmail = currentUser?.email || 
+    (typeof window !== 'undefined' ? localStorage.getItem('kathavichar_logged_admin_email') : '') || 
+    'Admin';
+
   const handleLogout = async () => {
     await logout();
     navigate('/admin/login');
@@ -97,8 +101,8 @@ export const AdminLayout: React.FC = () => {
         {/* User profile & Logout */}
         <div className="border-t border-slate-100 pt-4 dark:border-slate-800 mt-6 space-y-3">
           <div className="px-1">
-            <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300 truncate">
-              {currentUser?.email || 'admin'}
+            <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300 truncate" title={adminEmail}>
+              {adminEmail}
             </p>
             <p className="text-[10px] text-slate-400">Administrator</p>
           </div>
@@ -123,7 +127,7 @@ export const AdminLayout: React.FC = () => {
             </div>
             <div>
               <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
-                {currentUser?.email || 'Administrator'}
+                {adminEmail}
               </span>
               <p className="text-[10px] text-slate-400">Management & Editorial Panel</p>
             </div>

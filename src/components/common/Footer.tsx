@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Youtube, Instagram, Send, Facebook, Heart } from 'lucide-react';
+import { BookOpen, Youtube, Instagram, Send, Facebook, Heart, Mail, Headphones, MessageCircle } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { AdBanner } from './AdBanner';
 
 export const Footer: React.FC = () => {
-  const { socialMedia, categories } = useData();
+  const { socialMedia, categories, adminSupportEmail, legalConfig } = useData();
 
+  const supportEmail = adminSupportEmail || legalConfig?.contactEmail || 'contact@kathavichar.com';
   const activeCategories = categories.filter(c => c.isActive).slice(0, 5);
 
   return (
@@ -178,7 +179,49 @@ export const Footer: React.FC = () => {
                   About KathaVichar
                 </Link>
               </li>
+              <li>
+                <a 
+                  href={`mailto:${supportEmail}?subject=KathaVichar%20Support%20Request`}
+                  className="hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1 font-semibold text-amber-600 dark:text-amber-400"
+                >
+                  <Mail className="w-3 h-3" />
+                  <span>Admin Support</span>
+                </a>
+              </li>
             </ul>
+          </div>
+        </div>
+
+        {/* Admin Direct Support Banner */}
+        <div className="mt-10 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50/70 via-orange-50/40 to-pink-50/60 p-4 sm:p-5 dark:border-amber-900/40 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white shadow-xs">
+                <Headphones className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                  <span>Need Help or Have a Story Idea? Contact Admin</span>
+                  <span className="rounded bg-amber-100 dark:bg-amber-950/80 px-1.5 py-0.2 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                    Direct Support
+                  </span>
+                </h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Questions, feedback, copyright inquiries, or child safety requests reach the administrator directly.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href={`mailto:${supportEmail}?subject=KathaVichar%20Support%20Request`}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-amber-600 transition-colors"
+                title="Send email to administrator"
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span>{supportEmail}</span>
+              </a>
+            </div>
           </div>
         </div>
 
