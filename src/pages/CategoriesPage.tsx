@@ -36,56 +36,68 @@ export const CategoriesPage: React.FC = () => {
 
       <AdBanner position="header" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {activeCategories.map(cat => {
-          const themeStyle = getThemeStyles(cat.theme);
-          const count = stories.filter(s => s.categorySlug === cat.slug).length;
+      {activeCategories.length === 0 ? (
+        <div className="rounded-3xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-700">
+          <Layers className="mx-auto h-12 w-12 text-slate-400" />
+          <h3 className="mt-4 text-base font-bold text-slate-800 dark:text-white">
+            No Categories Available Yet
+          </h3>
+          <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
+            Story categories are being organized by our editorial team. Check back shortly!
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {activeCategories.map(cat => {
+            const themeStyle = getThemeStyles(cat.theme);
+            const count = stories.filter(s => s.categorySlug === cat.slug).length;
 
-          return (
-            <Link
-              key={cat.id}
-              to={`/category/${cat.slug}`}
-              className={`group flex flex-col justify-between overflow-hidden rounded-3xl border ${themeStyle.cardBorder} bg-white p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 dark:bg-slate-900`}
-            >
-              <div>
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
-                  <img
-                    src={cat.imageUrl || '/images/default-og.jpg'}
-                    alt={cat.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
-                    onError={e => {
-                      (e.target as HTMLImageElement).src = '/images/default-og.jpg';
-                    }}
-                  />
-                  <span
-                    className={`absolute top-3 right-3 rounded-full px-2.5 py-0.5 text-xs font-bold shadow-md ${themeStyle.badgeClass}`}
-                  >
-                    {themeStyle.decorativeEmoji} {cat.theme}
+            return (
+              <Link
+                key={cat.id}
+                to={`/category/${cat.slug}`}
+                className={`group flex flex-col justify-between overflow-hidden rounded-3xl border ${themeStyle.cardBorder} bg-white p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 dark:bg-slate-900`}
+              >
+                <div>
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
+                    <img
+                      src={cat.imageUrl || '/images/default-og.jpg'}
+                      alt={cat.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
+                      onError={e => {
+                        (e.target as HTMLImageElement).src = '/images/default-og.jpg';
+                      }}
+                    />
+                    <span
+                      className={`absolute top-3 right-3 rounded-full px-2.5 py-0.5 text-xs font-bold shadow-md ${themeStyle.badgeClass}`}
+                    >
+                      {themeStyle.decorativeEmoji} {cat.theme}
+                    </span>
+                  </div>
+
+                  <div className="pt-4">
+                    <h3 className="text-lg font-black text-slate-800 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                      {cat.name}
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-2">
+                      {cat.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs dark:border-slate-800">
+                  <span className="font-semibold text-slate-400">
+                    {count} {count === 1 ? 'Story' : 'Stories'}
+                  </span>
+                  <span className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    Explore &rarr;
                   </span>
                 </div>
-
-                <div className="pt-4">
-                  <h3 className="text-lg font-black text-slate-800 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                    {cat.name}
-                  </h3>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-2">
-                    {cat.description}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs dark:border-slate-800">
-                <span className="font-semibold text-slate-400">
-                  {count} {count === 1 ? 'Story' : 'Stories'}
-                </span>
-                <span className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore &rarr;
-                </span>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

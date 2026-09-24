@@ -329,3 +329,17 @@ export const initialAdsConfig: AdsConfig = {
     code: '<!-- Google AdSense Footer Leaderboard Banner (728x90) -->\n<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="5566778899" data-ad-format="auto"></ins>'
   }
 };
+
+export const initialLegalConfig = {
+  contactEmail: 'contact@kathavichar.com',
+  publisherName: 'KathaVichar Editorial Team',
+  siteName: 'KathaVichar (कथाविचार)',
+  customPrivacyPolicy: 'KathaVichar is dedicated to upholding the highest safety standards for young readers, parents, and teachers.',
+  customTerms: 'All stories, artwork, and educational material on KathaVichar are protected under copyright and fair use guidelines.',
+  customDisclaimer: 'All stories published on KathaVichar are intended for educational and entertainment purposes. Moral lessons are inspired by ancient folktales, Panchatantra, and classic bedtime lore.',
+  aboutText: 'KathaVichar (कथाविचार) is an inspiring digital sanctuary celebrating the magic of stories for kids in both Hindi and English. We believe that stories with morals shape compassionate, creative, and resilient minds.'
+};
+
+export const demoCategories = initialCategories;
+export const demoStories = initialStories;
+

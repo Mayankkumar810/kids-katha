@@ -12,6 +12,7 @@ import { StoryDetailPage } from './pages/StoryDetailPage';
 import { CategoriesPage, CategoryDetailPage } from './pages/CategoriesPage';
 import { BookmarksPage } from './pages/BookmarksPage';
 import { LegalPage } from './pages/LegalPage';
+import { AboutPage } from './pages/AboutPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // Admin Layout & Pages
@@ -22,6 +23,7 @@ import { Dashboard } from './admin/Dashboard';
 import { AddStory } from './admin/AddStory';
 import { ManageStories } from './admin/ManageStories';
 import { CategoryManagement } from './admin/CategoryManagement';
+import { PolicySettings } from './admin/PolicySettings';
 import { SocialMediaSettings } from './admin/SocialMediaSettings';
 import { HomepageSettings } from './admin/HomepageSettings';
 import { AdsSettings } from './admin/AdsSettings';
@@ -42,6 +44,7 @@ export default function App() {
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/category/:slug" element={<CategoryDetailPage />} />
                 <Route path="/bookmarks" element={<BookmarksPage />} />
+                <Route path="/about" element={<AboutPage />} />
                 <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
                 <Route path="/terms" element={<LegalPage type="terms" />} />
                 <Route path="/disclaimer" element={<LegalPage type="disclaimer" />} />
@@ -64,6 +67,7 @@ export default function App() {
                 <Route path="add-story" element={<AddStory />} />
                 <Route path="stories" element={<ManageStories />} />
                 <Route path="categories" element={<CategoryManagement />} />
+                <Route path="policies" element={<PolicySettings />} />
                 <Route path="social" element={<SocialMediaSettings />} />
                 <Route path="homepage" element={<HomepageSettings />} />
                 <Route path="ads" element={<AdsSettings />} />

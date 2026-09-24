@@ -7,14 +7,18 @@ import {
   SocialMediaConfig,
   HomepageConfig,
   AdsConfig,
-  ReadingProgress
+  ReadingProgress,
+  LegalConfig
 } from '../types';
 import {
   initialStories,
   initialCategories,
   initialSocialMedia,
   initialHomepageConfig,
-  initialAdsConfig
+  initialAdsConfig,
+  initialLegalConfig,
+  demoStories,
+  demoCategories
 } from '../data/initialData';
 
 interface DataContextType {
@@ -23,6 +27,7 @@ interface DataContextType {
   socialMedia: SocialMediaConfig;
   homepageConfig: HomepageConfig;
   adsConfig: AdsConfig;
+  legalConfig: LegalConfig;
   bookmarks: string[];
   readingProgress: Record<string, ReadingProgress>;
   loading: boolean;
@@ -36,10 +41,13 @@ interface DataContextType {
   updateSocialMedia: (config: SocialMediaConfig) => Promise<void>;
   updateHomepageConfig: (config: HomepageConfig) => Promise<void>;
   updateAdsConfig: (config: AdsConfig) => Promise<void>;
+  updateLegalConfig: (config: LegalConfig) => Promise<void>;
   toggleBookmark: (storySlug: string) => void;
   isBookmarked: (storySlug: string) => boolean;
   saveReadingProgress: (storySlug: string, percent: number, title: string, thumbnailUrl: string) => void;
   resetToInitialSeed: () => void;
+  loadDemoData: () => void;
+  clearAllStoriesAndCategories: () => void;
 }
 
 const DataContext = createContext<DataContextType>({} as DataContextType);
@@ -49,28 +57,49 @@ const LS_CATEGORIES = 'kathavichar_categories_v1';
 const LS_SOCIAL = 'kathavichar_social_v1';
 const LS_HOMEPAGE = 'kathavichar_homepage_v1';
 const LS_ADS = 'kathavichar_ads_v1';
+const LS_LEGAL = 'kathavichar_legal_v1';
 const LS_BOOKMARKS = 'kathavichar_bookmarks_v1';
 const LS_READING_PROGRESS = 'kathavichar_progress_v1';
+const LS_CLEAN_INIT = 'kathavichar_clean_init_v3';
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isFirebase = isFirebaseConfigured() && database !== null;
 
-  // Local state initialized with LocalStorage or seed data
+  // Ensure clean initial slate (no pre-created dummy stories or categories)
+  const isInitialCleaned = (() => {
+    try {
+      return localStorage.getItem(LS_CLEAN_INIT) === 'true';
+    } catch {
+      return false;
+    }
+  })();
+
+  if (!isInitialCleaned) {
+    try {
+      localStorage.setItem(LS_CLEAN_INIT, 'true');
+      localStorage.setItem(LS_STORIES, JSON.stringify([]));
+      localStorage.setItem(LS_CATEGORIES, JSON.stringify([]));
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  // Local state initialized with empty list for stories & categories by default
   const [stories, setStories] = useState<Story[]>(() => {
     try {
       const saved = localStorage.getItem(LS_STORIES);
-      return saved ? JSON.parse(saved) : initialStories;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return initialStories;
+      return [];
     }
   });
 
   const [categories, setCategories] = useState<Category[]>(() => {
     try {
       const saved = localStorage.getItem(LS_CATEGORIES);
-      return saved ? JSON.parse(saved) : initialCategories;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return initialCategories;
+      return [];
     }
   });
 
@@ -98,6 +127,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return saved ? JSON.parse(saved) : initialAdsConfig;
     } catch {
       return initialAdsConfig;
+    }
+  });
+
+  const [legalConfig, setLegalConfig] = useState<LegalConfig>(() => {
+    try {
+      const saved = localStorage.getItem(LS_LEGAL);
+      return saved ? JSON.parse(saved) : initialLegalConfig;
+    } catch {
+      return initialLegalConfig;
     }
   });
 
@@ -154,6 +192,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
+      localStorage.setItem(LS_LEGAL, JSON.stringify(legalConfig));
+    } catch (e) { console.warn(e); }
+  }, [legalConfig]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem(LS_BOOKMARKS, JSON.stringify(bookmarks));
     } catch (e) { console.warn(e); }
   }, [bookmarks]);
@@ -204,12 +248,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) setAdsConfig(data);
     });
 
+    const legalRef = ref(database, 'legalConfig');
+    const unsubscribeLegal = onValue(legalRef, snapshot => {
+      const data = snapshot.val();
+      if (data) setLegalConfig(data);
+    });
+
     return () => {
       unsubscribeStories();
       unsubscribeCategories();
       unsubscribeHomepage();
       unsubscribeSocial();
       unsubscribeAds();
+      unsubscribeLegal();
     };
   }, [isFirebase]);
 
@@ -325,6 +376,30 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateLegalConfig = async (config: LegalConfig): Promise<void> => {
+    if (isFirebase && database) {
+      await set(ref(database, 'legalConfig'), config);
+    } else {
+      setLegalConfig(config);
+    }
+  };
+
+  const loadDemoData = () => {
+    setStories(demoStories);
+    setCategories(demoCategories);
+  };
+
+  const clearAllStoriesAndCategories = () => {
+    setStories([]);
+    setCategories([]);
+    try {
+      localStorage.setItem(LS_STORIES, JSON.stringify([]));
+      localStorage.setItem(LS_CATEGORIES, JSON.stringify([]));
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   const toggleBookmark = (storySlug: string) => {
     setBookmarks(prev => {
       if (prev.includes(storySlug)) {
@@ -374,6 +449,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         socialMedia,
         homepageConfig,
         adsConfig,
+        legalConfig,
         bookmarks,
         readingProgress,
         loading,
@@ -387,10 +463,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateSocialMedia,
         updateHomepageConfig,
         updateAdsConfig,
+        updateLegalConfig,
         toggleBookmark,
         isBookmarked,
         saveReadingProgress,
-        resetToInitialSeed
+        resetToInitialSeed,
+        loadDemoData,
+        clearAllStoriesAndCategories
       }}
     >
       {children}

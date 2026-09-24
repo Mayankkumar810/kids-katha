@@ -319,41 +319,53 @@ export const HomePage: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-          {activeCategories.map(cat => {
-            const count = stories.filter(s => s.categorySlug === cat.slug).length;
-            const themeStyle = getThemeStyles(cat.theme);
-            return (
-              <Link
-                key={cat.id}
-                to={`/category/${cat.slug}`}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-2.5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
-                  <img
-                    src={cat.imageUrl || '/images/default-og.jpg'}
-                    alt={cat.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
-                    onError={e => {
-                      (e.target as HTMLImageElement).src = '/images/default-og.jpg';
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <span
-                    className={`absolute top-2 right-2 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-xs ${themeStyle.badgeClass}`}
-                  >
-                    {cat.theme}
-                  </span>
-                  <div className="absolute bottom-2 left-2 right-2 text-white">
-                    <p className="truncate text-xs font-bold">{cat.name}</p>
-                    <p className="text-[10px] text-slate-200">{count} {count === 1 ? 'Story' : 'Stories'}</p>
+        {activeCategories.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-slate-200 p-8 text-center dark:border-slate-800">
+            <Compass className="w-8 h-8 text-amber-400 mx-auto mb-2" />
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              Curating New Story Categories
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              Exciting collections and moral folklore categories are being prepared for young readers.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            {activeCategories.map(cat => {
+              const count = stories.filter(s => s.categorySlug === cat.slug).length;
+              const themeStyle = getThemeStyles(cat.theme);
+              return (
+                <Link
+                  key={cat.id}
+                  to={`/category/${cat.slug}`}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-2.5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
+                >
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
+                    <img
+                      src={cat.imageUrl || '/images/default-og.jpg'}
+                      alt={cat.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
+                      onError={e => {
+                        (e.target as HTMLImageElement).src = '/images/default-og.jpg';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <span
+                      className={`absolute top-2 right-2 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-xs ${themeStyle.badgeClass}`}
+                    >
+                      {cat.theme}
+                    </span>
+                    <div className="absolute bottom-2 left-2 right-2 text-white">
+                      <p className="truncate text-xs font-bold">{cat.name}</p>
+                      <p className="text-[10px] text-slate-200">{count} {count === 1 ? 'Story' : 'Stories'}</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* In-Between Ad */}
@@ -408,24 +420,39 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recentStories.map(story => (
-            <StoryCard key={story.id} story={story} />
-          ))}
-        </div>
+        {recentStories.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-slate-200 p-10 text-center dark:border-slate-800">
+            <BookOpen className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+            <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              New Stories Arriving Soon
+            </h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+              Our writers and illustrators are weaving captivating tales with morals and adventures. Check back soon!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recentStories.map(story => (
+              <StoryCard key={story.id} story={story} />
+            ))}
+          </div>
+        )}
 
-        <div className="mt-8 text-center">
-          <Link
-            to="/stories"
-            className="inline-flex items-center gap-2 rounded-2xl border-2 border-amber-500 px-6 py-3 text-xs font-bold text-amber-600 hover:bg-amber-500 hover:text-white dark:border-amber-400 dark:text-amber-400 dark:hover:bg-amber-400 dark:hover:text-slate-900 transition-all active:scale-95"
-          >
-            <span>Browse Complete Story Library ({stories.length} Stories)</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+        {stories.length > 0 && (
+          <div className="mt-8 text-center">
+            <Link
+              to="/stories"
+              className="inline-flex items-center gap-2 rounded-2xl border-2 border-amber-500 px-6 py-3 text-xs font-bold text-amber-600 hover:bg-amber-500 hover:text-white dark:border-amber-400 dark:text-amber-400 dark:hover:bg-amber-400 dark:hover:text-slate-900 transition-all active:scale-95"
+            >
+              <span>Browse Complete Story Library ({stories.length} Stories)</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* 6. TRENDING STORIES (VIEWS BASED) + SUGGESTED STORIES SPLIT */}
+      {stories.length > 0 && (
       <section className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Trending Stories (Views Based) */}
@@ -493,6 +520,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* 7. SOCIAL FOLLOW SECTION (TOGGLE BASED) */}
       <section className="container mx-auto px-4 sm:px-6">

@@ -66,6 +66,16 @@ export interface ReadingProgress {
   thumbnailUrl: string;
 }
 
+export interface LegalConfig {
+  contactEmail: string;
+  publisherName: string;
+  siteName: string;
+  customPrivacyPolicy?: string;
+  customTerms?: string;
+  customDisclaimer?: string;
+  aboutText?: string;
+}
+
 export interface AdminUser {
   email: string;
   uid: string;

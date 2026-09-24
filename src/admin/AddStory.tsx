@@ -21,9 +21,17 @@ export const AddStory: React.FC = () => {
 
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
-  const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || 'panchatantra-tales');
+  const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || '');
   const [theme, setTheme] = useState<ThemeType>(categories[0]?.theme || 'Moral');
   const [language, setLanguage] = useState<LanguageType>('Hindi');
+
+  // Auto-sync category selection when categories change
+  React.useEffect(() => {
+    if (categories.length > 0 && (!categorySlug || !categories.some(c => c.slug === categorySlug))) {
+      setCategorySlug(categories[0].slug);
+      setTheme(categories[0].theme);
+    }
+  }, [categories, categorySlug]);
   const [bannerUrl, setBannerUrl] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [content, setContent] = useState('');
@@ -162,6 +170,28 @@ export const AddStory: React.FC = () => {
           Create an SEO-optimized kids story in Hindi or English with custom theme and reading controls.
         </p>
       </div>
+
+      {categories.length === 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/40">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+            <div>
+              <p className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                No Categories Created Yet!
+              </p>
+              <p className="text-[11px] text-amber-800/80 dark:text-amber-300">
+                Stories need to belong to a category (with themes like Moral, Royal, Kids, Horror, or Default). Please create your first category first.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/admin/categories"
+            className="self-start sm:self-auto shrink-0 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-amber-600 transition-colors"
+          >
+            Create Category Now &rarr;
+          </Link>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Core Details */}

@@ -178,11 +178,6 @@ export const Footer: React.FC = () => {
                   About KathaVichar
                 </Link>
               </li>
-              <li>
-                <Link to="/admin" className="font-semibold text-emerald-600 dark:text-emerald-400">
-                  Admin Portal Login
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

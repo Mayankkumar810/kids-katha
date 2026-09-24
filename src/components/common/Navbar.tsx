@@ -195,15 +195,6 @@ export const Navbar: React.FC = () => {
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            {/* Admin Panel Link */}
-            <Link
-              to="/admin"
-              className="hidden md:flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition-colors"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Admin</span>
-            </Link>
-
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(prev => !prev)}
@@ -276,13 +267,6 @@ export const Navbar: React.FC = () => {
                 <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs text-white">
                   {bookmarks.length}
                 </span>
-              </Link>
-              <Link
-                to="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-amber-500 py-2.5 text-white font-bold"
-              >
-                <ShieldCheck className="w-4 h-4" /> Admin Dashboard
               </Link>
             </div>
           </div>
