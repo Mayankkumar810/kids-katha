@@ -1,0 +1,26 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": "auth != null",
+    "stories": {
+      ".indexOn": ["views", "categorySlug", "language", "createdAt"],
+      "$storyId": {
+        "views": {
+          ".write": true
+        }
+      }
+    },
+    "categories": {
+      ".indexOn": ["slug", "isActive"]
+    },
+    "homepageConfig": {
+      ".write": "auth != null"
+    },
+    "socialMediaConfig": {
+      ".write": "auth != null"
+    },
+    "adsConfig": {
+      ".write": "auth != null"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "KathaVichar - Kids & Family Story Platform",
+  "description": "A production-ready, kids-friendly story blogging platform featuring Hindi and English tales, dynamic themes (Kids, Moral, Royal, Horror, Default), dark mode, bookmarks, reading controls, and admin panel with Firebase support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
